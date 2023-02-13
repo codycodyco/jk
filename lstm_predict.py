@@ -3,6 +3,9 @@
 # File: lstm_predict.py
 # Author: lhy<lhy_in_blcu@126.com,https://huangyong.github.io>
 # Date: 18-5-23
+import os
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 import numpy as np
 from keras import backend as K
@@ -21,7 +24,7 @@ class LSTMNER:
         self.train_path = os.path.join(cur, 'data/train.txt')
         self.vocab_path = os.path.join(cur, 'model/vocab.txt')
         self.embedding_file = os.path.join(cur, 'model/token_vec_300.bin')
-        self.model_path = os.path.join(cur, 'model/tokenvec_bilstm2_crf_model_20.h5')
+        self.model_path = os.path.join(cur, 'model/tokenvec_bilstm2_crf_model_21.h5')
         self.word_dict = self.load_worddict()
         self.class_dict ={
                          'O':0,
@@ -49,7 +52,7 @@ class LSTMNER:
 
     '加载词表'
     def load_worddict(self):
-        vocabs = [line.strip() for line in open(self.vocab_path)]
+        vocabs = [line.strip() for line in open(self.vocab_path,encoding='utf-8')]
         word_dict = {wd: index for index, wd in enumerate(vocabs)}
         return word_dict
 
@@ -76,7 +79,7 @@ class LSTMNER:
     '''加载预训练词向量'''
     def load_pretrained_embedding(self):
         embeddings_dict = {}
-        with open(self.embedding_file, 'r') as f:
+        with open(self.embedding_file, 'r',encoding='utf-8') as f:
             for line in f:
                 values = line.strip().split(' ')
                 if len(values) < 300:

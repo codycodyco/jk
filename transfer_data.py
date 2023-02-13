@@ -36,7 +36,7 @@ class TransferData:
 
 
     def transfer(self):
-        f = open(self.train_filepath, 'w+')
+        f = open(self.train_filepath, 'w+',encoding='utf-8')
         count = 0
         for root,dirs,files in os.walk(self.origin_path):
             for file in files:
@@ -45,9 +45,9 @@ class TransferData:
                     continue
                 label_filepath = filepath.replace('.txtoriginal','')
                 print(filepath, '\t\t', label_filepath)
-                content = open(filepath).read().strip()
+                content = open(filepath,encoding='utf-8').read().strip()
                 res_dict = {}
-                for line in open(label_filepath):
+                for line in open(label_filepath,encoding='utf-8'):
                     res = line.strip().split('	')
                     start = int(res[1])
                     end = int(res[2])

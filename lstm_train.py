@@ -5,8 +5,8 @@
 # Date: 18-12-24
 
 import numpy as np
-from keras import backend as K
-from keras.preprocessing.sequence import pad_sequences
+#from keras import backend as K
+from keras_preprocessing.sequence import pad_sequences
 from keras.models import Sequential
 from keras.layers import Embedding, Bidirectional, LSTM, Dense, TimeDistributed, Dropout
 from keras_contrib.layers.crf import CRF
@@ -14,14 +14,13 @@ import matplotlib.pyplot as plt
 import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
 class LSTMNER:
     def __init__(self):
         cur = '/'.join(os.path.abspath(__file__).split('/')[:-1])
         self.train_path = os.path.join(cur, 'data/train.txt')
         self.vocab_path = os.path.join(cur, 'model/vocab.txt')
         self.embedding_file = os.path.join(cur, 'model/token_vec_300.bin')
-        self.model_path = os.path.join(cur, 'model/tokenvec_bilstm2_crf_model_20.h5')
+        self.model_path = os.path.join(cur, 'model/tokenvec_bilstm2_crf_model_21.h5')
         self.datas, self.word_dict = self.build_data()
         self.class_dict ={
                          'O':0,
@@ -50,7 +49,7 @@ class LSTMNER:
         sample_x = []
         sample_y = []
         vocabs = {'UNK'}
-        for line in open(self.train_path):
+        for line in open(self.train_path,encoding="utf-8"):
             line = line.rstrip().split('\t')
             if not line:
                 continue
@@ -80,13 +79,13 @@ class LSTMNER:
 
     '''保存字典文件'''
     def write_file(self, wordlist, filepath):
-        with open(filepath, 'w+') as f:
+        with open(filepath, 'w+',encoding='utf-8') as f:
             f.write('\n'.join(wordlist))
 
     '''加载预训练词向量'''
     def load_pretrained_embedding(self):
         embeddings_dict = {}
-        with open(self.embedding_file, 'r') as f:
+        with open(self.embedding_file, 'r',encoding='utf-8') as f:
             for line in f:
                 values = line.strip().split(' ')
                 if len(values) < 300:
@@ -133,7 +132,7 @@ class LSTMNER:
         x_train, y_train = self.modify_data()
         model = self.tokenvec_bilstm2_crf_model()
         history = model.fit(x_train[:], y_train[:], validation_split=0.2, batch_size=self.BATCH_SIZE, epochs=self.EPOCHS)
-        self.draw_train(history)
+        #self.draw_train(history)
         model.save(self.model_path)
         return model
 
